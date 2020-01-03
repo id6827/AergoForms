@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="../templates/layout">
+<th:block layout:fragment="head-title">
+	<title>Detail | Aergo Survey</title>
+	<link href="css/chart.css" rel="stylesheet">
+</th:block>
+<th:block layout:fragment="main">
+	<!-- <p th:text=${survey}></p> -->
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+	var surveyString = '[[${survey}]]';
+	var total ='[[${survey.aggregate().getCount()}]]';
+        /* alert(testValue); */
+	/*]]>*/
+	</script>
+	<figure class="highcharts-figure">
+		<div id="container"></div>
+		<p class="highcharts-description">description</p>
+	</figure>
+
+
+</th:block>
+<th:block layout:fragment="scripts">
+	<script src="https://code.highcharts.com/highcharts.js"></script>
+	<script src="https://code.highcharts.com/modules/series-label.js"></script>
+	<script src="js/chart.js"></script>
+</th:block>
+
+</html>
