@@ -19,7 +19,7 @@ import lombok.ToString;
 @NoArgsConstructor
 public class Answer {
   @Id
-  @GeneratedValue(strategy=GenerationType.SEQUENCE)
+  @GeneratedValue(strategy=GenerationType.IDENTITY)
   private Long id;
   private String text;
   private BigInteger count;
