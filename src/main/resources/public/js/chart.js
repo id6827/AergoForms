@@ -20,7 +20,7 @@ Highcharts.chart('container', {
         text: surveyJson.question
     },
     subtitle: {
-        text: 'Sub Title'
+        text: surveyJson.startTime + " ~ " + surveyJson.endTime
     },
     accessibility: {
         announceNewData: {
@@ -31,8 +31,10 @@ Highcharts.chart('container', {
         type: 'category'
     },
     yAxis: {
+    		min: 0,
+    		max: total,
         title: {
-            text: 'Total percent'
+            text: 'Total'
         }
 
     },
@@ -51,7 +53,7 @@ Highcharts.chart('container', {
 
     tooltip: {
         headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-        pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}</b> of ' + total + '.00<br/>'
+        pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}</b> of ' + total + '.00 <br/>'
     },
 
     series: [

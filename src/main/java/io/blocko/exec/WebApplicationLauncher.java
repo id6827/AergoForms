@@ -36,5 +36,15 @@ public class WebApplicationLauncher implements CommandLineRunner {
     answerRepository.save(otherAnswer);
     final Survey survey = new Survey(question, startTime, endTime, answer, otherAnswer);
     surveyRepository.save(survey);
+    
+    final String question1 = "아르고 대통령 국정 수행 지지율";
+    final LocalDateTime startTime1 = LocalDateTime.now();
+    final LocalDateTime endTime1 = LocalDateTime.now();
+    final Answer answer1 = new Answer("긍정", BigInteger.valueOf(50L));
+    final Answer theOtherAnswer1 = new Answer("부정", BigInteger.valueOf(50L));
+    answerRepository.save(answer1);
+    answerRepository.save(theOtherAnswer1);
+    final Survey survey1 = new Survey(question1, startTime1, endTime1, answer1, theOtherAnswer1);
+    surveyRepository.save(survey1);
   }
 }
