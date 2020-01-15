@@ -1,0 +1,14 @@
+dependencies {
+//    compile project(':frontend')
+    compile "org.springframework.boot:spring-boot-starter-web:${springBootVersion}"
+    compile "org.springframework.boot:spring-boot-starter-data-jpa:${springBootVersion}"
+
+    runtime "org.springframework.boot:spring-boot-devtools:${springBootVersion}"
+    runtime "com.h2database:h2:1.4.199"
+    runtime "org.slf4j:slf4j-api:1.7.25"
+    implementation("ch.qos.logback:logback-classic:1.2.3"){
+        exclude group: "org.slf4j", module: 'slf4j-api'
+    }
+
+    testCompile "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
+}

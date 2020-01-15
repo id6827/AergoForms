@@ -25,7 +25,4 @@ spring:
       show-sql: false
   session:
     store-type: jdbc
-  thymeleaf:
-    prefix: classpath:/public/
-    cache: false
-    mode: HTML
+  

@@ -1,0 +1,3 @@
+rootProject.name = 'aergo-forms'
+include 'backend'
+include 'frontend'
