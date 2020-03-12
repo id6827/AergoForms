@@ -1,5 +1,7 @@
 package io.blocko.model;
 
+import coinstack.paper.model.UuidEntity;
+import io.blocko.model.account.User;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -8,35 +10,57 @@ import java.util.List;
 import java.util.Optional;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@Table
+@Table(name = "SURVEY")
 @Entity
-@Getter
-@ToString
-@EqualsAndHashCode
+@ToString(callSuper = true)
 @NoArgsConstructor
-public class Survey {
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+public class Survey extends UuidEntity {
+
+  @Getter
+  @Setter
   private String question;
-  @OneToMany(cascade = CascadeType.REMOVE)
-  @JoinColumn(name="ANSWER_ID")
+
+  private byte type;
+
+  @OneToMany(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+  @JoinColumn(name = "ANSWER_UUID", referencedColumnName = "UUID")
+  @Getter
+  @Setter
   private List<Answer> answers = new ArrayList<>();
+
+  @OneToOne
+  @JoinColumn(name = "OWNER_UUID", referencedColumnName = "UUID")
+  @Getter
+  @Setter
+  private User owner;
+
+  @Getter
+  @Setter
   private LocalDateTime startTime;
+
+  @Getter
+  @Setter
   private LocalDateTime endTime;
+
+  public SurveyType getType() {
+    return SurveyType.fromCode(type);
+  }
+
+  public void setType(final SurveyType surveyType) {
+    this.type = surveyType.code();
+  }
 
   public Survey(String question, LocalDateTime startTime, LocalDateTime endTime,
       Answer... answers) {

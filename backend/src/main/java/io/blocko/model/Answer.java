@@ -1,27 +1,26 @@
 package io.blocko.model;
 
+import coinstack.paper.model.UuidEntity;
 import java.math.BigInteger;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.Table;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 
-@Table
 @Entity
-@Getter
-@ToString
-@EqualsAndHashCode
+@Table(name = "ANSWER")
 @NoArgsConstructor
-public class Answer {
-  @Id
-  @GeneratedValue(strategy=GenerationType.IDENTITY)
-  private Long id;
+@ToString(callSuper = true)
+public class Answer extends UuidEntity {
+
+  @Getter
+  @Setter
   private String text;
+
+  @Getter
+  @Setter
   private BigInteger count;
 
   public Answer(String text) {
@@ -39,7 +38,7 @@ public class Answer {
     return count;
   }
 
-  // Decrement{
+  // Decrement
   public BigInteger dec() {
     this.count = 0 == count.compareTo(BigInteger.ZERO) ? BigInteger.ZERO
         : count.add(BigInteger.ONE.negate());

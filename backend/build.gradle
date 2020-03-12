@@ -1,7 +1,14 @@
 dependencies {
-//    compile project(':frontend')
+
     compile "org.springframework.boot:spring-boot-starter-web:${springBootVersion}"
     compile "org.springframework.boot:spring-boot-starter-data-jpa:${springBootVersion}"
+    compile "org.springframework.boot:spring-boot-starter-security:${springBootVersion}"
+
+    compile "io.springfox:springfox-swagger2:2.8.0"
+    compile "io.springfox:springfox-swagger-ui:2.8.0"
+    compile "org.jadira.usertype:usertype.core:6.0.1.GA"
+    compile "joda-time:joda-time:2.10.5"
+    compile "cglib:cglib:3.3.0"
 
     runtime "org.springframework.boot:spring-boot-devtools:${springBootVersion}"
     runtime "com.h2database:h2:1.4.199"
