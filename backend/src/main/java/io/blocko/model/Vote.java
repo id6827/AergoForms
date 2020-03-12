@@ -1,8 +1,9 @@
 package io.blocko.model;
 
-import coinstack.paper.model.UuidEntity;
 import io.blocko.model.account.User;
 import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -14,15 +15,18 @@ import lombok.ToString;
 @Entity
 @Table(name = "VOTE")
 @NoArgsConstructor
+@IdClass(VoteId.class)
 @ToString(callSuper = false)
-public class Vote extends UuidEntity {
+public class Vote {
 
+  @Id
   @Getter
   @Setter
   @OneToOne
   @JoinColumn(name = "USER_UUID", referencedColumnName = "UUID", nullable = false)
   protected User voter;
 
+  @Id
   @Getter
   @Setter
   @OneToOne

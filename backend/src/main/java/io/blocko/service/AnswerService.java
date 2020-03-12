@@ -4,6 +4,7 @@ import static java.util.Optional.empty;
 
 import io.blocko.model.Answer;
 import io.blocko.model.Vote;
+import io.blocko.model.VoteId;
 import io.blocko.model.account.User;
 import io.blocko.repositoy.AnswerRepository;
 import io.blocko.repositoy.SurveyRepository;
@@ -42,16 +43,15 @@ public class AnswerService extends AbstractService {
 
     final User user = currentUserOpt.get();
     final Answer answer = answerOpt.get();
-    
-    //테이블 잘짜면 굳이 이거 안해도 될듯 ?...
-    final Optional<Vote> voteOpt =
-        voteRepository.findByVoterIdAndAnswerId(user.getId(), answer.getId());
-    
-    if(voteOpt.isPresent()) {
+
+    // 테이블 잘짜면 굳이 이거 안해도 될듯 ?...
+    final VoteId voteId = new VoteId(user.getId(), answer.getId());
+    if (voteRepository.existsById(voteId)) {
       logger.info("Duplicated vote");
       return empty();
     }
-    
+
+
     logger.info("Before increment answer: {}", answer);
     answer.inc();
     logger.info("After increment answer : {}", answer);
