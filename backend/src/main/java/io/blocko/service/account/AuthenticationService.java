@@ -35,11 +35,15 @@ public class AuthenticationService extends DaoAuthenticationProvider {
     logger.info("Authentication: {}", authentication);
 
     final String decodedPassword = (String) authentication.getCredentials();
-    logger.debug("Decrypted password: {}", decodedPassword);
+//    logger.debug("Decrypted password: {}", decodedPassword);
+    logger.info("Decrypted password: {}", decodedPassword);
 
     final UsernamePasswordAuthenticationToken decodedAuthentication =
         new UsernamePasswordAuthenticationToken(authentication.getName(), decodedPassword);
-    logger.trace("Trying to authenticate... {}", decodedAuthentication);
+//    logger.trace("Trying to authenticate... {}", decodedAuthentication);
+    logger.info("Trying to authenticate... {}", decodedAuthentication);
+    
+    logger.info("super !!! : {} ", super.authenticate(decodedAuthentication));
     return super.authenticate(decodedAuthentication);
   }
 }

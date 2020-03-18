@@ -18,6 +18,10 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.crypto.password.StandardPasswordEncoder;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 @EnableGlobalMethodSecurity(securedEnabled = true)
@@ -41,13 +45,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     return new StandardPasswordEncoder();
   }
 
+
   @Override
   protected void configure(final HttpSecurity http) throws Exception {
     http.csrf().disable();
-
-    http.authorizeRequests()
-        .antMatchers("/index")
-        .authenticated();
+    http.cors().configurationSource(req -> new CorsConfiguration().applyPermitDefaultValues()).and()
+        .authorizeRequests()
+        .antMatchers("/admin/**").hasRole("ADMIN")
+        .antMatchers("/**").permitAll()
+        .anyRequest().authenticated();
 
     http.authorizeRequests()
         .antMatchers(
@@ -70,16 +76,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     http.formLogin()
-        // .loginPage("/login")
-        .defaultSuccessUrl("/index", true)
+        .loginPage("http://localhost:8080/login")
+        .loginProcessingUrl("/loginProcess")
+//        .usernameParameter("username")
+//        .passwordParameter("password")
+//        .defaultSuccessUrl("/forms", true)
+        .successForwardUrl("/users/handle")
+        .failureForwardUrl("/users/handle")
         .permitAll();
 
-
-    http.authorizeRequests()
-        .antMatchers("/sessions")
-        .permitAll();
     http.logout()
-        .logoutSuccessUrl("/register")
+        .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+        .logoutSuccessUrl("/")
+        .invalidateHttpSession(true)
         .permitAll();
 
     http.headers().frameOptions().disable();
@@ -94,4 +103,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     auth.userDetailsService(userService).passwordEncoder(passwordEncoder());
   }
 
+  @Bean
+  public CorsConfigurationSource corsConfigurationSource() {
+      CorsConfiguration configuration = new CorsConfiguration();
+      configuration.addAllowedOrigin("*");
+      configuration.addAllowedMethod("*");
+      configuration.addAllowedHeader("*");
+      configuration.setAllowCredentials(true);
+      configuration.setMaxAge(3600L);
+      UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+      source.registerCorsConfiguration("/**", configuration);
+      return source;
+  }
 }

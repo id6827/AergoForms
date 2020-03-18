@@ -10,6 +10,10 @@ dependencies {
     compile "joda-time:joda-time:2.10.5"
     compile "cglib:cglib:3.3.0"
 
+    implementation "io.aergo:heraj-transport:${herajVersion}"
+    implementation "io.aergo:heraj-wallet:${herajVersion}"
+    implementation "io.aergo:heraj-smart-contract:${herajVersion}"
+    
     runtime "org.springframework.boot:spring-boot-devtools:${springBootVersion}"
     runtime "com.h2database:h2:1.4.199"
     runtime "org.slf4j:slf4j-api:1.7.25"
