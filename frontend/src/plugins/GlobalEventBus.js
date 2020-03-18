@@ -7,6 +7,8 @@ const GlobalEventBus = {
       CLOSE_DOCUMENT_UPLOAD: "closeDocumentUpload",
       VIEW_LOGIN_FORM: "viewLoginForm",
       VIEW_SIGNUP_FORM: "viewSignupForm",
+      VIEW_LOGIN2QRCODE_FORM: "viewLogin2qrcodeForm",
+      VIEW_SIGNUP2QRCODE_FORM: "viewSignup2qrcodeForm",
     };
   }
 };

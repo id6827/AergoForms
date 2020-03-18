@@ -5,6 +5,7 @@
         <v-col md="4">
           <LoginForm />
           <SignupForm />
+          <QRCodeForm />
         </v-col>
       </v-row>
     </v-content>
@@ -13,12 +14,15 @@
 
 <script>
 import LoginForm from './LoginForm';
+import SignupForm from './LoginSignupForm';
+import QRCodeForm from './LoginQRCodeForm';
 
 export default {
   name: 'login',
   components: {
     LoginForm,
-    SignupForm: () => import('./SignupForm.vue'),
+    SignupForm,
+    QRCodeForm,
   },
 };
 </script>
