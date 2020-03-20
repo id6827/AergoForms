@@ -6,7 +6,7 @@
     <v-card-text>
       <v-col>
         <v-row justify="center">
-          <!-- <div>{{ prettyTime }}</div> -->
+          <Timer :time="prettyTime" />
         </v-row>
         <v-row justify="center">
           <QRCodeVue :value="value" :size="size" level="H"></QRCodeVue>
@@ -21,10 +21,13 @@
 </template>
 <script>
 import QRCodeVue from 'qrcode.vue';
+import Timer from '@/components/Timer';
+
 export default {
   name: 'QRCodeForm',
   components: {
     QRCodeVue,
+    Timer,
   },
   data: function() {
     return {
@@ -33,16 +36,17 @@ export default {
       form: false,
       type: true,
       uuid: '',
-      time: 0,
+      time: 180,
+      timer: null,
     };
   },
   computed: {
-    // prettyTime () {
-    // 	 let time = this.time / 60
-    // 	 let minutes = parseInt(time)
-    // 	 let secondes = Math.round((time - minutes) * 60)
-    // 	 return minutes+":"+secondes
-    // }
+    prettyTime() {
+      let time = this.time / 60;
+      let minutes = parseInt(time);
+      let secondes = Math.round((time - minutes) * 60);
+      return minutes + ':' + secondes;
+    },
   },
   methods: {
     requestAuth(data) {
@@ -55,7 +59,7 @@ export default {
       };
 
       this.$axios
-        .post('/users/signin', params)
+        .post('http://192.168.1.212:9000/users/signin', params)
         .then((response) => {
           if (response.status == 200) {
             console.log(response);
@@ -80,7 +84,7 @@ export default {
       console.log(params);
 
       this.$axios
-        .post('/users', params)
+        .post('http://192.168.1.212:9000/users', params)
         .then((response) => {
           if (response.status == 200) {
             console.log(response);
@@ -104,8 +108,22 @@ export default {
         this.$bus.$emit(this.$DEFINE_EVENT_NAME.VIEW_SIGNUP_FORM);
       }
     },
+    start() {
+      if (!this.timer) {
+        this.timer = setInterval(() => {
+          if (this.time > 0) {
+            this.time--;
+          } else {
+            clearInterval(this.timer);
+            this.sound.play();
+            this.reset();
+          }
+        }, 1000);
+      }
+    },
   },
   mounted() {
+    this.start();
     // 폼의 뷰을 제어하는 버스
     this.$bus.$on(this.$DEFINE_EVENT_NAME.VIEW_LOGIN2QRCODE_FORM, (data) => {
       this.form = true;
