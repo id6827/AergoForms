@@ -19,7 +19,9 @@
               </v-flex>
             </v-row>
             <v-row>
-              <FormDetailChart graphTitle="CPU TOP" />
+              <v-flex>
+                <FormDetailChart graphTitle="CPU TOP" />
+              </v-flex>
             </v-row>
           </v-col>
         </v-card-text>

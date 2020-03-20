@@ -1,7 +1,7 @@
 <template>
   <v-container pa-5>
     <v-row>
-      <v-col cols="12">
+      <v-col cols="8-lg-4">
         <v-card>
           <FormList />
         </v-card>

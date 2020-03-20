@@ -1,10 +1,13 @@
 <template>
   <v-card v-if="form" class="pa-4 elevation-12" min-width="480px">
     <v-card-title>
-      <div class="headline mb-6">QR 로그인</div>
+      <div class="headline mb-6">2FA - QR 인증</div>
     </v-card-title>
     <v-card-text>
       <v-col>
+        <v-row justify="center">
+          <!-- <div>{{ prettyTime }}</div> -->
+        </v-row>
         <v-row justify="center">
           <QRCodeVue :value="value" :size="size" level="H"></QRCodeVue>
         </v-row>
@@ -16,10 +19,8 @@
     </v-card-text>
   </v-card>
 </template>
-
 <script>
 import QRCodeVue from 'qrcode.vue';
-
 export default {
   name: 'QRCodeForm',
   components: {
@@ -27,25 +28,66 @@ export default {
   },
   data: function() {
     return {
-      value: '',
+      value: {},
       size: 300,
       form: false,
       type: true,
       uuid: '',
+      time: 0,
     };
   },
+  computed: {
+    // prettyTime () {
+    // 	 let time = this.time / 60
+    // 	 let minutes = parseInt(time)
+    // 	 let secondes = Math.round((time - minutes) * 60)
+    // 	 return minutes+":"+secondes
+    // }
+  },
   methods: {
-    requestAuth() {
-      // 회원가입처리 처리
+    requestAuth(data) {
+      // 로그인 처리
+      console.log(data);
+      let form = JSON.parse(data);
+      let params = {
+        uuid: form.uuid,
+        username: form.username,
+      };
+
       this.$axios
-        .post('/auth', {
-          uuid: this.uuid,
-        })
+        .post('/users/signin', params)
         .then((response) => {
           if (response.status == 200) {
+            console.log(response);
+            alert('로그인 완료');
+            this.$router.push('/');
+          } else {
+            alert('가입 실패');
+          }
+        })
+        .catch((err) => {
+          alert('에러 발생' + err);
+        });
+    },
+    requestSignup(data) {
+      // 회원가입처리 처리
+      console.log(data);
+      let form = JSON.parse(data);
+      let params = {
+        uuid: form.uuid,
+        username: form.username,
+      };
+      console.log(params);
+
+      this.$axios
+        .post('/users', params)
+        .then((response) => {
+          if (response.status == 200) {
+            console.log(response);
             alert('회원가입 완료');
             this.$router.push('/');
           } else {
+            console.log(response);
             alert('가입 실패');
           }
         })
@@ -68,14 +110,16 @@ export default {
     this.$bus.$on(this.$DEFINE_EVENT_NAME.VIEW_LOGIN2QRCODE_FORM, (data) => {
       this.form = true;
       this.type = true;
-      this.value = data;
-      //   this.requestAuth();
+      console.log(data);
+      this.value = JSON.stringify(data);
+      this.requestAuth(JSON.stringify(data));
     });
     this.$bus.$on(this.$DEFINE_EVENT_NAME.VIEW_SIGNUP2QRCODE_FORM, (data) => {
       this.form = true;
       this.type = false;
-      this.value = data;
-      //   this.requestAuth();
+      console.log(data);
+      this.value = JSON.stringify(data);
+      this.requestSignup(JSON.stringify(data));
     });
   },
   beforeDestroy() {
@@ -84,20 +128,16 @@ export default {
   },
 };
 </script>
-
 <style scoped>
 label {
   color: black;
 }
-
 button {
   width: 100%;
 }
-
 .signup:hover {
   cursor: pointer;
 }
-
 /* 스낵바 글자색상 */
 >>> .v-snack__content {
   color: black;

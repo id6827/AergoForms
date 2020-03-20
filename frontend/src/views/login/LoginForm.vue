@@ -79,9 +79,13 @@ export default {
     },
     requestLoginUUID() {
       // 로그인 정보
-      let params = {};
+      let params = {
+        username: this.userID,
+        password: this.userPwd,
+      };
+
       this.$axios
-        .post('/login', params)
+        .post('/users/presignin', params)
         .then((response) => {
           if (response.status == 200) {
             let data = response.data;

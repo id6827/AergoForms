@@ -18,7 +18,7 @@ export default Vue.extend({
   },
   data() {
     return {
-      datacollection: null,
+      datacollection: {},
       myoption: null,
     };
   },
@@ -36,12 +36,17 @@ export default Vue.extend({
         { name: 'Host05', value: this.getRandomInt() },
       ];
 
+      // Sort the data by value
+      dummy.sort((a, b) => {
+        return b.value - a.value;
+      });
+
       this.datacollection = {
         labels: dummy.map((a) => a.name),
         datasets: [
           {
             // label: 'Data One',
-            // backgroundColor: '#f87979',
+            backgroundColor: '#f87979',
             data: dummy.map((a) => a.value),
             backgroundColor: ['#db4e4e', '#e26e6e', '#e26e6e', '#f1b3b3', '#f1b3b3'],
           },
@@ -97,7 +102,7 @@ export default Vue.extend({
 
 <style>
 .small {
-  max-width: 600px;
+  max-width: 300px;
   margin: auto;
 }
 </style>

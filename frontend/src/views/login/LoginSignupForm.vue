@@ -38,12 +38,12 @@
         ></v-text-field>
         <v-row class="mt-0 pt-0">
           <v-col>
-            <v-select v-model="year" :items="years" label="출생연도" outlined required> </v-select>
+            <v-select v-model="year" :items="years" label="출생연도" placeholder="선택" outlined required> </v-select>
           </v-col>
           <v-col>
             <v-radio-group label="성별" v-model="gender" :mandatory="false" row>
-              <v-radio label="남자" value="male"></v-radio>
-              <v-radio label="여자" value="female"></v-radio>
+              <v-radio label="남자" value="0"></v-radio>
+              <v-radio label="여자" value="1"></v-radio>
             </v-radio-group>
           </v-col>
         </v-row>
@@ -102,9 +102,15 @@ export default {
     },
     requestSignupUUID() {
       // 회원가입 처리
-      let params = {};
+      let params = {
+        username: this.userID,
+        password: this.userPwd2,
+        birthyear: this.year,
+        gender: this.gender,
+      };
+
       this.$axios
-        .post('/signup', params)
+        .post('/users/presignup', params)
         .then((response) => {
           if (response.status == 200) {
             let data = response.data;
