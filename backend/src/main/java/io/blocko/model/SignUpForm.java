@@ -21,9 +21,10 @@ public class SignUpForm {
   
   @Getter
   @Setter
-  protected Short birtyear;
+  protected Short birthyear;
   
   @Getter
   @Setter
   protected byte gender;
+  
 }

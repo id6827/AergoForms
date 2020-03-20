@@ -29,7 +29,12 @@ public class AnswerService extends AbstractService {
   @Autowired
   protected VoteRepository voteRepository;
 
-
+  /**
+   * increment.
+   * 
+   * @param id Answer의 uuid
+   * @return Answer
+   */
   public Optional<Answer> increment(final String id) {
     final Optional<User> currentUserOpt = userService.getCurrentUser();
     if (!currentUserOpt.isPresent()) {

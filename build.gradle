@@ -2,7 +2,7 @@ group = 'io.blocko'
 
 ext {
   springBootVersion = '2.0.0.RELEASE'
-  herajVersion = '1.1.0'
+  herajVersion = '1.4.0'
 }
 
 buildscript {

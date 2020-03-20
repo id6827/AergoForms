@@ -20,7 +20,7 @@ public class AddressService extends AbstractService {
   }
 
   public Address save(User user, String address) {
-    logger.debug("ADDRESS-SERVICE SAVE : username {}, address {}", user.getUsername(), address);
+    logger.info("ADDRESS-SERVICE SAVE : username {}, address {}", user.getUsername(), address);
     return addressRepository.save(new Address(user, address));
   }
 

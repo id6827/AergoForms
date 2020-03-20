@@ -31,7 +31,12 @@ public class SurveyService extends AbstractService {
   @Autowired
   protected UserService userService;
 
-
+  /**
+   * 설문 상세 조회.
+   * 
+   * @param id Survey의 uuid
+   * @return Survey
+   */
   public Optional<Survey> getSurvey(final String id) {
     final Optional<Survey> surveyOpt = surveyRepository.findById(id);
     if (!surveyOpt.isPresent()) {
@@ -59,6 +64,12 @@ public class SurveyService extends AbstractService {
     return surveyRepository.findByType(SurveyType.Public.code(), pageable);
   }
 
+  /**
+   * 설문 등록.
+   * 
+   * @param form {@link Form}
+   * @return Survey
+   */
   public Survey register(Form form) {
     // String question, byte type, LocalDateTime startTime, LocalDateTime endTime,
     // Answer... answers

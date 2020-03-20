@@ -32,13 +32,21 @@ public class Answer extends UuidEntity {
     this.count = count;
   }
 
-  // Increment
+  /**
+   * Increment.
+   * 
+   * @return BigInteger
+   */
   public BigInteger inc() {
     this.count = count.add(BigInteger.ONE);
     return count;
   }
 
-  // Decrement
+  /**
+   * Decrement.
+   * 
+   * @return BigInteger
+   */
   public BigInteger dec() {
     this.count = 0 == count.compareTo(BigInteger.ZERO) ? BigInteger.ZERO
         : count.add(BigInteger.ONE.negate());

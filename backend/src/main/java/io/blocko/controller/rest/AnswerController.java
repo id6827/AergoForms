@@ -19,6 +19,12 @@ public class AnswerController extends AbstractController {
   @Autowired
   private AnswerService answerService;
 
+  /**
+   * 설문 항목의 상세 내용 반환.
+   * 
+   * @param id 설문 항목의 uuid.
+   * @return Answer
+   */
   @GetMapping("{id}")
   public HttpEntity<Answer> detail(@PathVariable String id) {
     return answerService.getAnswer(id).map(it -> {

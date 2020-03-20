@@ -2,8 +2,8 @@ package io.blocko.model.account;
 
 import static java.util.Optional.ofNullable;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import coinstack.paper.model.UuidEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -22,21 +22,21 @@ public class User extends UuidEntity implements Serializable {
   @Getter
   @Setter
   protected String username;
-  
+
   @JsonIgnore
   @Getter
   @Setter
   protected String password;
-  
+
   @Getter
   @Setter
-  @Column(length=4)
+  @Column(length = 4)
   protected Short birtyear;
 
   protected Byte status;
 
   protected Byte authority;
-  
+
   protected Byte gender;
 
   public User(final String username, final String password) {
@@ -59,7 +59,7 @@ public class User extends UuidEntity implements Serializable {
   public void setAuthority(final AuthorityCode authority) {
     this.authority = authority.code();
   }
-  
+
   public Gender getGender() {
     return ofNullable(gender).map(Gender::fromCode).orElse(null);
   }

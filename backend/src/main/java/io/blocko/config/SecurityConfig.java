@@ -75,21 +75,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
       logger.info("API Data not guarded");
     }
 
-    http.formLogin()
-        .loginPage("http://localhost:8080/login")
-        .loginProcessingUrl("/loginProcess")
-//        .usernameParameter("username")
-//        .passwordParameter("password")
-//        .defaultSuccessUrl("/forms", true)
-        .successForwardUrl("/users/handle")
-        .failureForwardUrl("/users/handle")
+    http.formLogin().loginPage("http://localhost:8080/login")
+        // .loginProcessingUrl("/loginProcess")
+        // .usernameParameter("username")
+        // .passwordParameter("password")
+        // .defaultSuccessUrl("/forms", true)
+        // .successForwardUrl("/users/handle")
+        // .failureForwardUrl("/users/handle")
         .permitAll();
 
-    http.logout()
-        .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-        .logoutSuccessUrl("/")
-        .invalidateHttpSession(true)
-        .permitAll();
+    http.logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout")).logoutSuccessUrl("/")
+        .invalidateHttpSession(true).permitAll();
 
     http.headers().frameOptions().disable();
 
@@ -105,14 +101,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
   @Bean
   public CorsConfigurationSource corsConfigurationSource() {
-      CorsConfiguration configuration = new CorsConfiguration();
-      configuration.addAllowedOrigin("*");
-      configuration.addAllowedMethod("*");
-      configuration.addAllowedHeader("*");
-      configuration.setAllowCredentials(true);
-      configuration.setMaxAge(3600L);
-      UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-      source.registerCorsConfiguration("/**", configuration);
-      return source;
+    CorsConfiguration configuration = new CorsConfiguration();
+    configuration.addAllowedOrigin("*");
+    configuration.addAllowedMethod("*");
+    configuration.addAllowedHeader("*");
+    configuration.setAllowCredentials(true);
+    configuration.setMaxAge(3600L);
+    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    source.registerCorsConfiguration("/**", configuration);
+    return source;
   }
+  
 }

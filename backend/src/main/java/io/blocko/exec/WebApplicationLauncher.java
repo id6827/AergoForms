@@ -25,7 +25,7 @@ public class WebApplicationLauncher implements CommandLineRunner {
 
   @Autowired
   private AnswerRepository answerRepository;
-  
+
   @Override
   public void run(String... args) throws Exception {
     final String question = "Are you a developer?";

@@ -26,6 +26,12 @@ public class SurveyController extends AbstractController {
   @Autowired
   private SurveyService surveyService;
 
+  /**
+   * 설문의 상세 내용 반환.
+   * 
+   * @param id 설문의 uuid.
+   * @return Survey
+   */
   @GetMapping("{id}")
   public HttpEntity<Survey> detail(@PathVariable String id) {
     return surveyService.getSurvey(id).map(it -> {
@@ -34,6 +40,12 @@ public class SurveyController extends AbstractController {
     }).orElse(ResponseEntity.noContent().build());
   }
 
+  /**
+   * 설문 목록 반환.
+   * 
+   * @param pageable 페이지 크기 설정
+   * @return List
+   */
   @GetMapping
   public HttpEntity<List<Survey>> list(
       @PageableDefault(size = 10, direction = Direction.ASC) Pageable pageable) {
