@@ -85,7 +85,7 @@ export default {
       };
 
       this.$axios
-        .post('/users/presignin', params)
+        .post('http://192.168.1.212:9000/users/presignin', params)
         .then((response) => {
           if (response.status == 200) {
             let data = response.data;

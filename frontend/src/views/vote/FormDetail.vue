@@ -10,17 +10,19 @@
         </v-card-title>
         <v-card-text>
           <v-col>
-            <v-row>
-              <v-flex xs9>
-                <FormDetailPoll />
+            <v-col v-if="!voted">
+              <v-flex>
+                <v-radio-group v-model="vote" v-for="item in items" :key="item.name" :mandatory="false">
+                  <v-radio :label="item.name" :value="item.value"></v-radio>
+                </v-radio-group>
               </v-flex>
-              <v-flex xs3>
-                <Button text="투표하기" type="btn-tertiary" size="big" full-width @click.native="vote" />
+              <v-flex mt-5>
+                <Button text="투표하기" type="btn-tertiary" size="big" full-width @click.native="doVote" />
               </v-flex>
-            </v-row>
+            </v-col>
             <v-row>
               <v-flex>
-                <FormDetailChart graphTitle="CPU TOP" />
+                <FormDetailChart v-if="voted" />
               </v-flex>
             </v-row>
           </v-col>
@@ -32,42 +34,73 @@
 
 <script>
 import Button from '@/components/Button';
-import FormDetailPoll from './FormDetailPoll';
 import FormDetailChart from './FormDetailChart';
 // import _ from 'lodash';
 
 export default {
   components: {
     Button,
-    FormDetailPoll,
     FormDetailChart,
   },
   data() {
     return {
       dialog: false,
+      id: '',
+      voted: false,
+      vote: '',
+      items: [
+        { name: '찬성합니다', value: 0 },
+        { name: '반대합니다', value: 1 },
+      ],
     };
   },
   methods: {
     closeDialog() {
       this.dialog = false;
+      this.vote = '';
     },
-    getFormDetail(id) {
-      console.log(id);
+    getVoteDetail(id) {
+      this.$axios
+        .get('/getVoteDetail/' + this.id)
+        .then((response) => {})
+        .catch((err) => {});
     },
-    vote() {},
+    doVote() {
+      if (this.vote === '') {
+        alert('투표해주세요.');
+      }
+      let params = {
+        id: this.id,
+        vote: this.vote,
+      };
+      console.log(params);
+      // this.$axios
+      //   .post('/vote', params)
+      //   .then((response) => {
+      //     if (response.status === 200) {
+      //       alert('Signed');
+      //       this.dialog = false;
+      //       this.$bus.$emit(this.$DEFINE_EVENT_NAME.CLOSE_VOTE_DETAIL);
+      //     } else {
+      //       alert('Failed to sign');
+      //     }
+      //   })
+      //   .catch((err) => {});
+    },
   },
   mounted() {
     // OPEN & GET DETAIL
-    this.$bus.$on(this.$DEFINE_EVENT_NAME.OPEN_DOCUMENT_DETAIL, () => {
+    this.$bus.$on(this.$DEFINE_EVENT_NAME.OPEN_VOTE_DETAIL, () => {
       this.dialog = true;
     });
-    this.$bus.$on(this.$DEFINE_EVENT_NAME.GET_DOCUMENT_DETAIL, (id) => {
-      this.getFormDetail(id);
+    this.$bus.$on(this.$DEFINE_EVENT_NAME.GET_VOTE_DETAIL, (id) => {
+      this.id = id;
+      this.getVoteDetail(id);
     });
   },
   beforeDestroy() {
-    this.$bus.$off(this.$DEFINE_EVENT_NAME.OPEN_DOCUMENT_DETAIL);
-    this.$bus.$off(this.$DEFINE_EVENT_NAME.GET_DOCUMENT_DETAIL);
+    this.$bus.$off(this.$DEFINE_EVENT_NAME.OPEN_VOTE_DETAIL);
+    this.$bus.$off(this.$DEFINE_EVENT_NAME.GET_VOTE_DETAIL);
   },
 };
 </script>

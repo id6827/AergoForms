@@ -110,7 +110,7 @@ export default {
       };
 
       this.$axios
-        .post('/users/presignup', params)
+        .post('http://192.168.1.212:9000/users/presignup', params)
         .then((response) => {
           if (response.status == 200) {
             let data = response.data;
@@ -152,7 +152,7 @@ export default {
     },
     years() {
       const year = new Date().getFullYear();
-      return Array.from({ length: year - 1900 }, (value, index) => 1901 + index);
+      return Array.from({ length: year - 1919 }, (value, index) => 2001 - index);
     },
   },
   mounted() {

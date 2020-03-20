@@ -36,11 +36,38 @@ export default {
     };
   },
   methods: {
+    refreshList() {
+      this.$axios
+        .get('/getList')
+        .then((response) => {
+          if (response.status == 200) {
+            if (!_.isEmpty(response.data)) {
+              response.data.filter((val) => {
+                // this.rows.push({});
+              });
+            }
+          } else {
+            alert('FAILED TO GET LIST');
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
     moveToDetail(value) {
       // OPEN DETAIL DIALOG
-      this.$bus.$emit(this.$DEFINE_EVENT_NAME.OPEN_DOCUMENT_DETAIL);
-      this.$bus.$emit(this.$DEFINE_EVENT_NAME.GET_DOCUMENT_DETAIL, value.id);
+      this.$bus.$emit(this.$DEFINE_EVENT_NAME.OPEN_VOTE_DETAIL);
+      this.$bus.$emit(this.$DEFINE_EVENT_NAME.GET_VOTE_DETAIL, value.id);
     },
+  },
+  mounted() {
+    this.refreshList();
+    this.$bus.$on(this.$DEFINE_EVENT_NAME.CLOSE_VOTE_DETAIL, () => {
+      this.refreshList();
+    });
+  },
+  beforeDestroy() {
+    this.$bus.$off(this.$DEFINE_EVENT_NAME.CLOSE_VOTE_DETAIL);
   },
 };
 </script>
