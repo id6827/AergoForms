@@ -107,8 +107,8 @@ public class UserService extends AbstractService implements UserDetailsService {
   /**
    * SIGNUP PROCESS (1/2) QR출력에 필요한 내용 클라이언트로 출력.
    * 
-   * @param signUpForm username, password, birthyear, gender
-   * @return json
+   * @param signUpForm {@link SignUpForm}
+   * @return Object
    * @throws JsonProcessingException {@link JsonProcessingException}
    * @throws DuplicateUsernameException {@link DuplicateUsernameException}
    */
@@ -165,7 +165,10 @@ public class UserService extends AbstractService implements UserDetailsService {
       user.setPassword(passwordEncoder.encode(rawPassword));
       userRepository.save(user);
       addressService.save(user, address);
-      return authenticate(new UsernameAndPassword(username, rawPassword));
+      final Map<String, Object> map = new HashMap<>();
+      map.put("address", address);
+      map.put("user", authenticate(new UsernameAndPassword(username, rawPassword)));
+      return map;
     } catch (TimeoutException e) {
       id2future.remove(uuid);
       tmp.remove(uuid);
@@ -177,7 +180,7 @@ public class UserService extends AbstractService implements UserDetailsService {
    * SIGNIN PROCESS (1/2) QR출력에 필요한 내용 반환.
    * 
    * @param usernameAndPassword username, password
-   * @return json
+   * @return Object
    */
   public Object preSignIn(final UsernameAndPassword usernameAndPassword) {
     final String username = usernameAndPassword.getUsername();
@@ -220,7 +223,12 @@ public class UserService extends AbstractService implements UserDetailsService {
       final User user = future.get(3, TimeUnit.MINUTES);
       logger.info("try login : {}", user);
       final String rawPassword = user.getPassword();
-      return authenticate(new UsernameAndPassword(username, rawPassword));
+      
+      final Map<String, Object> map = new HashMap<>();
+      map.put("address",
+          addressService.findByUsername(user, PageRequest.of(0, 1)).getContent().get(0));
+      map.put("user", authenticate(new UsernameAndPassword(username, rawPassword)));
+      return map;
     } catch (TimeoutException e) {
       id2future.remove(uuid);
       tmp.remove(uuid);
@@ -317,7 +325,7 @@ public class UserService extends AbstractService implements UserDetailsService {
    */
   public void handle(final Event event) throws Exception {
 
-    if (null != event.getEncryptedUuid()) {
+    if (null != event.getSignature()) {
       final Verifier verifier = new AergoSignVerifier();
       final AccountAddress addr = new AccountAddress(event.getAddress());
       final Signature sig = new Signature(BytesValue.of(event.getSignature().getBytes()));

@@ -15,10 +15,6 @@ public class Event {
   
   @Getter
   @Setter
-  private String encryptedUuid;
-
-  @Getter
-  @Setter
   private String address;
 
   @Getter
