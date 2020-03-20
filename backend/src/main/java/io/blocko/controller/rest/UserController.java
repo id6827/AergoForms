@@ -18,6 +18,7 @@ import java.util.concurrent.ExecutionException;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -63,10 +64,8 @@ public class UserController extends AbstractController {
       throws InterruptedException, ExecutionException {
     logger.info("event: {}", event);
     final Object result = userService.signUp(event);
-    logger.info("is null? {}", isNull(result));
-    return ResponseEntity.ok().body(result);
-    // return null == result ? ResponseEntity.badRequest().build()
-    // : ResponseEntity.status(HttpStatus.CREATED).body(result);
+    return isNull(result) ? ResponseEntity.badRequest().build()
+        : ResponseEntity.status(HttpStatus.CREATED).body(result);
   }
 
   /**
@@ -118,10 +117,7 @@ public class UserController extends AbstractController {
     logger.info("Event : {}", event);
 
     final Object result = userService.signIn(event);
-    logger.info("login result : {}?", result);
-    return ResponseEntity.ok().body(result);
-    // return null == result ? ResponseEntity.badRequest().build() :
-    // ResponseEntity.ok().body(result);
+    return null == result ? ResponseEntity.badRequest().build() : ResponseEntity.ok().body(result);
   }
 
 

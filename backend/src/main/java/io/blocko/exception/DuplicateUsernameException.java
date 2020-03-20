@@ -1,5 +1,5 @@
 package io.blocko.exception;
 
-public class DuplicateUsernameException extends Exception {
+public class DuplicateUsernameException extends RuntimeException {
 
 }

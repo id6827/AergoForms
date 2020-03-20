@@ -12,6 +12,7 @@ import static org.springframework.data.domain.PageRequest.of;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import hera.api.encode.Decoder;
 import hera.api.model.AccountAddress;
 import hera.api.model.BytesValue;
 import hera.api.model.Signature;
@@ -323,14 +324,17 @@ public class UserService extends AbstractService implements UserDetailsService {
    * @param event uuid, address, signature, username 
    * @throws Exception sign검증
    */
-  public void handle(final Event event) throws Exception {
-
+  public void handle(final Event event) {
+    // signin 의 경우 signature 포함
+    // signup의 경우 signature 미포함 
     if (null != event.getSignature()) {
       final Verifier verifier = new AergoSignVerifier();
-      final AccountAddress addr = new AccountAddress(event.getAddress());
-      final Signature sig = new Signature(BytesValue.of(event.getSignature().getBytes()));
+      final AccountAddress addr = new AccountAddress(
+          addressService.findByUsername(getUser(event.getUsername()).get(), PageRequest.of(0, 1))
+              .getContent().get(0).getAddress());
+      final Signature sig = new Signature(BytesValue.of(event.getSignature(), Decoder.Base58));
       if (!verifier.verify(addr, BytesValue.of(event.getUuid().getBytes()), sig)) {
-        throw new Exception();
+        throw new RuntimeException();
       }
     }
     final String requestId = event.getUuid();
