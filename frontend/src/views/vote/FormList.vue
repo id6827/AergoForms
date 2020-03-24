@@ -5,11 +5,13 @@
       <v-spacer></v-spacer>
       <v-text-field v-model="search" append-icon="mdi-magnify" label="검색" single-line hide-details></v-text-field>
     </v-card-title>
-    <v-data-table :headers="headers" :items="desserts" :search="search" @click:row="moveToDetail"></v-data-table>
+    <v-data-table :headers="headers" :items="list" :search="search" @click:row="moveToDetail"></v-data-table>
   </v-card>
 </template>
 
 <script>
+import _ from 'lodash';
+
 export default {
   data() {
     return {
@@ -21,29 +23,37 @@ export default {
           sortable: false,
           value: 'name',
         },
+        { text: '상태', value: 'status' },
         { text: '개설일', value: 'date' },
       ],
-      desserts: [
-        {
-          name: 'Frozen Yogurt',
-          date: '2020/01/01',
-        },
-        {
-          name: 'Ice cream sandwich',
-          date: '2020/01/01',
-        },
-      ],
+      list: [],
     };
   },
   methods: {
+    beautifulDate(timestamp) {
+      let currentDate = new Date(timestamp * 1000);
+
+      let date = currentDate.getDate();
+      let month = currentDate.getMonth(); //Be careful! January is 0 not 1
+      let year = currentDate.getFullYear();
+
+      return year + '년 ' + (month + 1) + '월 ' + date + '일 ';
+    },
     refreshList() {
+      this.list = [];
       this.$axios
-        .get('/getList')
+        .get('http://192.168.1.66:8888/UserVoteList')
         .then((response) => {
+          console.log(response);
           if (response.status == 200) {
             if (!_.isEmpty(response.data)) {
-              response.data.filter((val) => {
-                // this.rows.push({});
+              response.data.list.filter((val) => {
+                this.list.push({
+                  id: val.voteidx,
+                  name: val.votename,
+                  status: val.status,
+                  date: this.beautifulDate(val.regdate),
+                });
               });
             }
           } else {

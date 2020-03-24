@@ -60,6 +60,8 @@
       <v-row justify="center" class="mt-3 mb-6">
         <p class="login" @click="viewLogin">돌아가기</p>
         <p class="login" @click="viewQRCode">QR TEST</p>
+        {{ this.isValidID }}
+        {{ this.isValidYear }}
       </v-row>
       <p align="center">Copyright ⓒ 2020 BLOCKO. All right reserved.</p>
     </v-card-text>
@@ -85,6 +87,8 @@ export default {
       isValidID: false,
       isValidPwd: false,
       isValidPwd2: false,
+      isValidYear: false,
+      isValidGender: false,
     };
   },
   methods: {
@@ -97,7 +101,7 @@ export default {
       else this.isValidPwd = false;
     },
     validPwd2() {
-      if (this.userPwd2 !== '') this.isValidPwd2 = true;
+      if (this.userPwd2 !== '' && this.userPwd === this.userPwd2) this.isValidPwd2 = true;
       else this.isValidPwd2 = false;
     },
     requestSignupUUID() {
@@ -126,7 +130,14 @@ export default {
     },
     // 엔터 키로 로그인
     enterLogin(event) {
-      if (this.isValidID && this.isValidPwd && this.isValidPwd2 && event.keyCode === 13) {
+      if (
+        this.isValidID &&
+        this.isValidPwd &&
+        this.isValidPwd2 &&
+        this.isValidYear &&
+        this.isValidGender &&
+        event.keyCode === 13
+      ) {
         this.requestSignupUUID();
       }
     },
@@ -145,9 +156,19 @@ export default {
       this.$bus.$emit(this.$DEFINE_EVENT_NAME.VIEW_SIGNUP2QRCODE_FORM, 'fromsignup');
     },
   },
+  watch: {
+    year() {
+      if (this.year !== '') this.isValidYear = true;
+      else this.isValidYear = false;
+    },
+    gender() {
+      if (this.gender !== '') this.isValidGender = true;
+      else this.isValidGender = false;
+    },
+  },
   computed: {
     isDisabled: function() {
-      if (this.isValidID && this.isValidPwd && this.isValidPwd2) return false;
+      if (this.isValidID && this.isValidPwd && this.isValidPwd2 && this.isValidYear && this.isValidGender) return false;
       else return true;
     },
     years() {

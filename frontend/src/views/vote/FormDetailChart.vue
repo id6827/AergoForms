@@ -8,6 +8,7 @@
 <script>
 import Vue from 'vue';
 import BarChart from './chart/BarChart.js';
+import Chart from 'chart.js';
 
 export default Vue.extend({
   components: {
@@ -15,6 +16,7 @@ export default Vue.extend({
   },
   props: {
     graphTitle: String,
+    chartData: Array,
   },
   data() {
     return {
@@ -23,19 +25,10 @@ export default Vue.extend({
     };
   },
   mounted() {
-    this.fillData();
+    this.fillData(this.chartData);
   },
   methods: {
-    fillData() {
-      // Create random dummy data
-      const dummy = [
-        { name: 'Host01', value: this.getRandomInt() },
-        { name: 'Host02', value: this.getRandomInt() },
-        { name: 'Host03', value: this.getRandomInt() },
-        { name: 'Host04', value: this.getRandomInt() },
-        { name: 'Host05', value: this.getRandomInt() },
-      ];
-
+    fillData(dummy) {
       this.datacollection = {
         labels: dummy.map((a) => a.name),
         datasets: [
@@ -79,7 +72,6 @@ export default Vue.extend({
               display: true,
               ticks: {
                 suggestedMin: 0,
-                suggestedMax: 100,
               },
             },
           ],

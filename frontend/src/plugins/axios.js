@@ -9,6 +9,7 @@ if (token != null) {
   axios.defaults.headers.common["Authorization"] =
     "Bearer " + sessionStorage.getItem("af-token");
 }
+// axios.defaults.headers.common["Content-Type"] = "application/json"
 
 let config = {
   baseURL: process.env.baseURL || process.env.apiUrl || ""

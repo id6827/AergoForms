@@ -86,7 +86,7 @@ export default {
       this.$axios
         .post('http://192.168.1.212:9000/users', params)
         .then((response) => {
-          if (response.status == 200) {
+          if (response.status == 201) {
             console.log(response);
             alert('회원가입 완료');
             this.$router.push('/');
@@ -101,6 +101,7 @@ export default {
     },
     goBack() {
       this.form = false;
+      this.time = 180;
       // true: 로그인, false: 회원가입
       if (this.type) {
         this.$bus.$emit(this.$DEFINE_EVENT_NAME.VIEW_LOGIN_FORM);

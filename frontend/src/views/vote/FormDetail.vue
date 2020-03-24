@@ -22,7 +22,7 @@
             </v-col>
             <v-row>
               <v-flex>
-                <FormDetailChart v-if="voted" />
+                <FormDetailChart v-if="voted && chartData.length > 0" :chartData="chartData" />
               </v-flex>
             </v-row>
           </v-col>
@@ -35,7 +35,7 @@
 <script>
 import Button from '@/components/Button';
 import FormDetailChart from './FormDetailChart';
-// import _ from 'lodash';
+import _ from 'lodash';
 
 export default {
   components: {
@@ -48,44 +48,101 @@ export default {
       id: '',
       voted: false,
       vote: '',
-      items: [
-        { name: '찬성합니다', value: 0 },
-        { name: '반대합니다', value: 1 },
-      ],
+      items: [],
+      chartData: [],
+      address: 'test8',
     };
   },
   methods: {
     closeDialog() {
       this.dialog = false;
+      this.voted = false;
       this.vote = '';
+      this.items = [];
+      this.chartData = [];
+    },
+    isDuplicated(id) {
+      let params = new FormData();
+      params.append('pubkey', this.address);
+      params.append('voteidx', id);
+
+      this.$axios
+        .post('http://192.168.1.66:8888/UserVoteCheck', params)
+        .then((response) => {
+          console.log(response.data);
+          if (response.status == 200) {
+            if (response.data) {
+              this.voted = true;
+            }
+          } else {
+            alert('FAILED TO CHECK');
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
     getVoteDetail(id) {
       this.$axios
-        .get('/getVoteDetail/' + this.id)
-        .then((response) => {})
-        .catch((err) => {});
+        .get('http://192.168.1.66:8888/UserVoteDetail/' + id)
+        .then((response) => {
+          if (response.status == 200) {
+            if (!_.isEmpty(response.data)) {
+              console.log(response.data);
+              response.data.viewItem.filter((val) => {
+                this.items.push({
+                  value: val.voteitemidx,
+                  name: val.item,
+                });
+
+                this.chartData.push({
+                  name: val.item,
+                  value: val.count,
+                });
+              });
+            }
+          } else {
+            alert('FAILED TO GET DETAIL');
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
     doVote() {
       if (this.vote === '') {
         alert('투표해주세요.');
+        return;
       }
-      let params = {
-        id: this.id,
-        vote: this.vote,
-      };
-      console.log(params);
-      // this.$axios
-      //   .post('/vote', params)
-      //   .then((response) => {
-      //     if (response.status === 200) {
-      //       alert('Signed');
-      //       this.dialog = false;
-      //       this.$bus.$emit(this.$DEFINE_EVENT_NAME.CLOSE_VOTE_DETAIL);
-      //     } else {
-      //       alert('Failed to sign');
-      //     }
-      //   })
-      //   .catch((err) => {});
+
+      // let params = {
+      //   voteitemidx: this.vote,
+      //   pubkey: 'test',
+      //   voteidx: this.id,
+      // };
+      let params = new FormData();
+      params.append('voteitemidx', this.vote);
+      params.append('pubkey', this.address);
+      params.append('voteidx', this.id);
+
+      this.$axios
+        .post('http://192.168.1.66:8888/UserVoteGo', params)
+        .then((response) => {
+          if (response.status === 200) {
+            // let objIndex = this.chartData.findIndex((obj) => obj.name == this.vote);
+            // this.chartData[objIndex].value += 1;
+            alert('투표 완료');
+            // this.items = [];
+            // this.chartData = [];
+            this.voted = true;
+            // this.$bus.$emit(this.$DEFINE_EVENT_NAME.CLOSE_VOTE_DETAIL);
+          } else {
+            alert('투표 실패');
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
   },
   mounted() {
@@ -95,6 +152,7 @@ export default {
     });
     this.$bus.$on(this.$DEFINE_EVENT_NAME.GET_VOTE_DETAIL, (id) => {
       this.id = id;
+      this.isDuplicated(id);
       this.getVoteDetail(id);
     });
   },
